@@ -234,7 +234,7 @@
     toast(document.body.classList.contains('lights-on') ? 'Lights on ✨' : 'Lights off 🌙');
   });
 
-  // --- Music (Web Audio API, no external files) ---
+  // --- Music (Web Audio API, Happy Birthday melody) ---
   let audioCtx, playing=false, seqInterval;
   const btnMusic = $('#btnMusic');
   btnMusic.addEventListener('click', async () => {
@@ -242,7 +242,7 @@
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     if(!playing){
-      startSong(); playing=true; btnMusic.textContent = '⏸️ Pause Music'; toast('Music on 🎶');
+      startSong(); playing=true; btnMusic.textContent = '⏸️ Pause Music'; toast('Happy Birthday tune on 🎶');
     } else {
       stopSong(); playing=false; btnMusic.textContent = '🎵 Play Music'; toast('Music paused ⏸️');
     }
@@ -260,18 +260,44 @@
   }
 
   function startSong(){
-    const scale = [261.63,293.66,329.63,392.00,440.00,523.25]; // C D E G A C
-    let step=0;
+    // Notes for "Happy Birthday" in C major (frequencies in Hz)
+    const notes = [
+      261.63, // C4 (Happy)
+      261.63, // C4 (Happy)
+      293.66, // D4 (Birth)
+      261.63, // C4 (day)
+      349.23, // F4 (to)
+      329.63, // E4 (you)
+      261.63, // C4 (Happy)
+      261.63, // C4 (Happy)
+      293.66, // D4 (Birth)
+      261.63, // C4 (day)
+      392.00, // G4 (to)
+      349.23, // F4 (you)
+      261.63, // C4 (Happy)
+      261.63, // C4 (Happy)
+      523.25, // C5 (Birth)
+      440.00, // A4 (day)
+      349.23, // F4 (to)
+      329.63, // E4 (you)
+      293.66, // D4 (Happy)
+      293.66, // D4 (Happy)
+      523.25, // C5 (Birth)
+      440.00, // A4 (day)
+      392.00, // G4 (to)
+      349.23  // F4 (you)
+    ];
+    let step = 0;
     seqInterval = setInterval(()=>{
       if(!audioCtx) return;
-      // arpeggio chords
-      const base = step%2===0 ? 0 : 2; // alternate Cmaj/Amin feel
-      for(let i=0;i<3;i++) playTone(scale[(base+i*2)%scale.length], 0.0 + i*0.04, 0.25);
-      // little melody
-      playTone(scale[(step*2)%scale.length], 0.12, 0.22);
+      // Play the current note
+      playTone(notes[step % notes.length], 0, 0.25);
       step++;
-    }, 420);
+      // Loop the song
+      if(step >= notes.length) step = 0;
+    }, 300); // Adjusted tempo for Happy Birthday
   }
+
   function stopSong(){
     clearInterval(seqInterval);
   }
@@ -344,3 +370,4 @@
 </script>
 </body>
 </html>
+
